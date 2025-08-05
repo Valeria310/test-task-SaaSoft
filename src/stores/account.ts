@@ -7,21 +7,28 @@ export const useAccountStore = defineStore("account", () => {
     const accounts = ref<Account[]>([]);
 
     function addAccount() {
-        accounts.value.push({
-            id: nanoid(),
-            labels: [],
-            type: "Локальная" as AccountType,
-            login: "",
-            password: "",
-        });
+        accounts.value = [
+            ...accounts.value,
+            {
+                id: nanoid(),
+                labels: [],
+                type: "Локальная" as AccountType,
+                login: "",
+                password: "",
+            },
+        ];
     }
 
-    function updateAccount(index: number, updated: Partial<Account>) {
-        accounts.value[index] = { ...accounts.value[index], ...updated };
+    function updateAccount(index: number, updated: Account) {
+        accounts.value[index] = { ...updated };
+        accounts.value = [...accounts.value];
+        uploadToLocalStorage();
     }
 
     function removeAccount(index: number) {
         accounts.value.splice(index, 1);
+        accounts.value = [...accounts.value];
+        uploadToLocalStorage();
     }
 
     function unloadFromLocalStorage() {
@@ -38,14 +45,6 @@ export const useAccountStore = defineStore("account", () => {
     function uploadToLocalStorage() {
         localStorage.setItem("account-list", JSON.stringify(accounts.value));
     }
-
-    watch(
-        accounts,
-        () => {
-            uploadToLocalStorage();
-        },
-        { deep: true }
-    );
 
     return {
         accounts,
