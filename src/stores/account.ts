@@ -1,6 +1,6 @@
 import { defineStore } from "pinia";
 import { ref, watch } from "vue";
-import { Account, AccountType } from "@/types/account";
+import type { Account, AccountType } from "../types/account.ts";
 import { nanoid } from "nanoid";
 
 export const useAccountStore = defineStore("account", () => {
